@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = Slugger::VERSION
   s.authors     = ["Seth Faxon"]
   s.email       = ["seth.faxon@gmail.com"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "https://github.com/sfaxon/slugger"
+  s.summary     = %q{Slugger is yet another slug generator.}
+  s.description = %q{Slugger is yet another slug generator.}
 
   s.rubyforge_project = "slugger"
 
@@ -17,8 +17,15 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-
+  
+  s.extra_rdoc_files = [
+    "LICENSE",
+    "README.rdoc"
+  ]
+  
   # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
+  s.add_dependency "activerecord", ">= 3.0.0"
+  s.add_development_dependency "rspec", ">= 2.0.0"
+  s.add_development_dependency "sqlite3", "~> 1.3.0"
   # s.add_runtime_dependency "rest-client"
 end

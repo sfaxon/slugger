@@ -20,7 +20,7 @@ The default source column is title.
 
 Say you have an Episode model that belongs to TVSeries.  Every episode will have a pilot, but you don't want the unique validation to build silly looking urls:
 
-  class Series << ActiveRecord::Base
+  class Episode << ActiveRecord::Base
     belongs_to :series
     
     has_slug :title, :scope => :series_id
