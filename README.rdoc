@@ -1,0 +1,43 @@
+= Slugger
+
+Slugger is yet another slug generator.  It makes pretty urls for Active Record models.  It jumps through some hoops to make sure every slug is unique.  
+
+== Installation
+
+It's a gem. Either run `gem install slugger` at the command line, or add `gem 'slugger'` to your Gemfile.
+
+== Usage
+
+  has_slug :source_column, [options]
+
+The default source column is title.
+
+:source_column can also be an array, for example, if you wanted to create slugs for an Author model on first and last name:
+
+  has_slug [:first_name, :last_name]
+
+== Options
+
+Say you have an Episode model that belongs to TVSeries.  Every episode will have a pilot, but you don't want the unique validation to build silly looking urls:
+
+  class Series << ActiveRecord::Base
+    belongs_to :series
+    
+    has_slug :title, :scope => :series_id
+  end
+  
+
+== Example
+
+  create_table "collection" do |t|
+    t.string   "title"
+    t.string   "slug"
+  end
+
+  class Project < ActiveRecord::Base
+    has_slug
+  end
+
+  Collection.create(:title => 'Quick foxes jumping')
+  Collection.first.slug => 'quick-foxes-jumping'
+
