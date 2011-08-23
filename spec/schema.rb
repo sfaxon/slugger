@@ -28,11 +28,11 @@ CreateSchema.suppress_messages do
 end
 
 class Post < ActiveRecord::Base
-  acts_as_sluggable
+  has_slug
 end
 
 class User < ActiveRecord::Base
-  acts_as_sluggable [:first_name, :last_name]
+  has_slug [:first_name, :last_name]
 
   def name
     [first_name, last_name].compact.join(' ')

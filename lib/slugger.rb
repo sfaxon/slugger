@@ -7,7 +7,7 @@ module Slugger
     base.extend(ClassMethods)
   end
   module ClassMethods
-    def acts_as_sluggable(title_column=nil,sluger_options={})
+    def has_slug(title_column=nil,sluger_options={})
       class_inheritable_accessor :sluger_options
       sluger_options[:title_column]      ||= title_column || 'title'
       # sluger_options[:title_column]      ||= 'title'
