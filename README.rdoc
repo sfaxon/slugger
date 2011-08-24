@@ -29,12 +29,13 @@ Say you have an Episode model that belongs to TVSeries.  Every episode will have
 
 == Example
 
-  create_table "collection" do |t|
+  create_table "collections" do |t|
     t.string   "title"
     t.string   "slug"
   end
+  add_index(:collections, :slug)
 
-  class Project < ActiveRecord::Base
+  class Collection < ActiveRecord::Base
     has_slug
   end
 
