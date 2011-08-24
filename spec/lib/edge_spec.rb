@@ -12,5 +12,9 @@ describe Edge do
     e = Edge.create(:name => "hello")
     e.slug_name.should == "hello"
   end
+  it "should honor downcase false" do
+    e = Edge.create(:name => "YELLING")
+    e.slug_name.should == "YELLING"
+  end
 
 end

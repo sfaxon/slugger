@@ -7,15 +7,17 @@ module Slugger
     base.extend(ClassMethods)
   end
   module ClassMethods
-    def has_slug(title_column=nil,slugger_options={})
+    def has_slug(title_column=nil,options={})
       class_inheritable_accessor :slugger_options
-      slugger_options[:title_column]      ||= title_column || 'title'
-      # slugger_options[:title_column]      ||= 'title'
-      slugger_options[:slug_column]       ||= 'slug'
-      slugger_options[:as_param]          ||= true
-      slugger_options[:substitution_char] ||= '-'
-      slugger_options[:downcase]          ||= true
-      self.slugger_options = slugger_options
+      default_options = {
+        :title_column      => 'title',
+        :slug_column       => 'slug',
+        :as_param          => true,
+        :substitution_char =>'-',
+        :downcase          => true
+      }
+      self.slugger_options = default_options.merge(options)
+      self.slugger_options[:title_column] = title_column unless title_column.nil?
       
       # if columns_hash[slugger_options[:title_column].to_s].nil?
       # 
