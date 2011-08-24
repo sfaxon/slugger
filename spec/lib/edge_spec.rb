@@ -4,7 +4,8 @@ require 'spec_helper'
 #   has_slug 'name', :slug_column => :slug_name,
 #                    :as_param => false,
 #                    :substitution_char => "_",
-#                    :downcase => false
+#                    :downcase => false,
+#                    :on_conflict => :concat_random_chars
 # end
 
 describe Edge do
@@ -20,5 +21,11 @@ describe Edge do
     e = Edge.create(:name => "with spaces")
     e.slug_name.should == "with_spaces"
   end
-
+  it "should concat random chars when conflict" do
+    e = Edge.create(:name => "dupable")
+    e.slug_name.should == "dupable"
+    f = Edge.create(:name => e.slug_name)
+    f.should be_valid
+    f.slug_name.should_not == e.slug_name
+  end
 end

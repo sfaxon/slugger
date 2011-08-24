@@ -1,6 +1,6 @@
 = Slugger
 
-Slugger is yet another slug generator.  It makes pretty urls for Active Record models.  It jumps through some hoops to make sure every slug is unique.  
+Slugger is yet another slug generator.  It makes pretty urls for Active Record models.  Why would the ruby (on rails) community need another slug generating plugin you ask?  It doesn't, but I needed one that would jump through some hoops to make sure slugs are unique without setting errors.
 
 == Installation
 
@@ -8,24 +8,32 @@ It's a gem. Either run `gem install slugger` at the command line, or add `gem 's
 
 == Usage
 
-  has_slug :source_column, [options]
+  has_slug :source_column, [options_hash]
 
-The default source column is title.
+The default source column is title and slug column is, well slug.  The following two settings are the same:
+
+  has_slug
+  has_slug :title, :slug_column => 'slug'
 
 :source_column can also be an array, for example, if you wanted to create slugs for an Author model on first and last name:
 
-  has_slug [:first_name, :last_name]
+  class Author << ActiveRecord::Base
+    has_slug [:first_name, :last_name]
+  end
 
-== Options
+To be sure that the slug will never have a validation error:
 
-Say you have an Episode model that belongs to TVSeries.  Every episode will have a pilot, but you don't want the unique validation to build silly looking urls:
+  class Post << ActiveRecord::Base
+    has_slug :title, :on_conflict => :concat_random_chars
+  end
+
+Say you have an Episode model that belongs to TVSeries.  Every episode will have a pilot, but you don't want the unique validation to build silly looking urls: (this doesn't actually work), patches welcome
 
   class Episode << ActiveRecord::Base
     belongs_to :series
     
     has_slug :title, :scope => :series_id
   end
-  
 
 == Example
 

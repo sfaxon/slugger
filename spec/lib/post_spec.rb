@@ -13,4 +13,10 @@ describe Post do
     p = Post.create(:title => "apostrop'hes", :slug => "apostrophes")
     p.slug.should == "apostrophes"
   end
+  it "should not be valid on duplicate" do
+    p = Post.create(:title => "hello")
+    p.slug.should == "hello"
+    q = Post.create(:title => "hello")
+    q.should_not be_valid
+  end
 end
