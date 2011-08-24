@@ -72,7 +72,7 @@ module Slugger
       s.gsub!(/\W+/, ' ') # all non-word chars to spaces
       s.strip!            # ohh la la
       s.downcase!         if slugger_options[:downcase]
-      s.gsub!(/\ +/, '-') # spaces to dashes, preferred separator char everywhere
+      s.gsub!(/\ +/, slugger_options[:substitution_char].to_s) # spaces to dashes, preferred separator char everywhere
       self.send("#{self.slugger_options[:slug_column]}=", s) 
     end
     def strip_title

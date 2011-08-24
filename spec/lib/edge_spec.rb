@@ -16,5 +16,9 @@ describe Edge do
     e = Edge.create(:name => "YELLING")
     e.slug_name.should == "YELLING"
   end
+  it "should honor changing substitution_char" do
+    e = Edge.create(:name => "with spaces")
+    e.slug_name.should == "with_spaces"
+  end
 
 end
