@@ -20,6 +20,11 @@ class CreateSchema < ActiveRecord::Migration
       t.string :slug
       t.timestamps
     end
+    
+    create_table :edges, :force => true do |t|
+      t.string :name
+      t.string :slug_name
+    end
   end
 end
 
@@ -33,12 +38,11 @@ end
 
 class User < ActiveRecord::Base
   has_slug [:first_name, :last_name]
+end
 
-  def name
-    [first_name, last_name].compact.join(' ')
-  end
-
-  def name=(names)
-    self[:first_name], self[:last_name] = names.split(' ', 2)
-  end
+class Edge < ActiveRecord::Base
+  has_slug 'name', :slug_column => :slug_name,
+                   :as_param => false,
+                   :substitution_char => "_",
+                   :downcase => false
 end

@@ -14,15 +14,16 @@ module Slugger
       slugger_options[:slug_column]       ||= 'slug'
       slugger_options[:as_param]          ||= true
       slugger_options[:substitution_char] ||= '-'
+      slugger_options[:downcase]          ||= true
       self.slugger_options = slugger_options
       
       # if columns_hash[slugger_options[:title_column].to_s].nil?
       # 
       #   raise ArgumentError, "#{self.name} is missing source column"
       # end
-      raise ArgumentError, "#{self.name} is missing required slug column" if columns_hash[slugger_options[:slug_column]].nil?
+      raise ArgumentError, "#{self.name} is missing required #{slugger_options[:slug_column]} column" if columns_hash[slugger_options[:slug_column].to_s].nil?
 
-      before_validation :create_slug, :on => :create
+      before_validation :permalize, :on => :create
 
       validates slugger_options[:slug_column].to_sym, :presence => true
       if slugger_options[:scope]
@@ -55,25 +56,25 @@ module Slugger
     protected
 
     def permalize
-      return if !self.send("#{self.sluggable_conf[:slug_column]}").blank?
-      s = Iconv.iconv('ascii//ignore//translit', 'utf-8', self.send("#{self.sluggable_conf[:title_column]}")).to_s
+      return unless self.send("#{self.slugger_options[:slug_column]}").blank?
+      if slugger_options[:title_column].is_a?(Array)
+        s = ""
+        self.slugger_options[:title_column].each do |m|
+          s = "#{s} #{self.send(m)}"
+        end
+        s = Iconv.iconv('ascii//ignore//translit', 'utf-8', s).to_s
+      else
+        s = Iconv.iconv('ascii//ignore//translit', 'utf-8', self.send("#{self.slugger_options[:title_column]}")).to_s
+      end
       s.gsub!(/\'/, '')   # remove '
       s.gsub!(/\W+/, ' ') # all non-word chars to spaces
       s.strip!            # ohh la la
-      s.downcase!         #
+      s.downcase!         if slugger_options[:downcase]
       s.gsub!(/\ +/, '-') # spaces to dashes, preferred separator char everywhere
-      self.send("#{self.sluggable_conf[:slug_column]}=", s) 
+      self.send("#{self.slugger_options[:slug_column]}=", s) 
     end
     def strip_title
-      self.send("#{self.sluggable_conf[:title_column]}").strip!
-    end
-    
-    def create_slug
-      self.slug ||= clean("#{column_to_slug}")
-    end
-  
-    def clean(string)
-      string.downcase.gsub(/[^\w\s\d\_\-]/,'').gsub(/\s\s+/,' ').gsub(/[^\w\d]/, slugger_options[:substitution_char])
+      self.send("#{self.slugger_options[:title_column]}").strip!
     end
   end
 end
