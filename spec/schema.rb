@@ -42,7 +42,6 @@ end
 
 class Edge < ActiveRecord::Base
   has_slug 'name', :slug_column => :slug_name,
-                   :as_param => false,
                    :substitution_char => "_",
                    :downcase => false,
                    :on_conflict => :concat_random_chars

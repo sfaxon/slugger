@@ -12,7 +12,6 @@ module Slugger
       default_options = {
         :title_column      => 'title',
         :slug_column       => 'slug',
-        :as_param          => true,
         :substitution_char => '-',
         :downcase          => true,
         :on_conflict       => :error
@@ -36,25 +35,11 @@ module Slugger
       end
 
       send :define_method, :column_to_slug, lambda { self.send(slugger_options[:title_column]) }
-
-      class << self
-        def find(*args)
-          if self.slugger_options[:as_param] && args.first.is_a?(String)
-            find_by_slug(args)
-          else
-            super(*args)
-          end
-        end
-      end
     
       include InstanceMethods
     end
   end
   module InstanceMethods
-
-    def to_param
-      slugger_options[:as_param] ? self.slug : self.id
-    end
 
     protected
 
