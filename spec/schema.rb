@@ -13,14 +13,14 @@ class CreateSchema < ActiveRecord::Migration
       t.string :slug
       t.timestamps
     end
-    
+
     create_table :users, :force => true do |t|
       t.string :first_name
       t.string :last_name
       t.string :slug
       t.timestamps
     end
-    
+
     create_table :edges, :force => true do |t|
       t.string :name
       t.string :slug_name
@@ -37,7 +37,7 @@ class Post < ActiveRecord::Base
 end
 
 class User < ActiveRecord::Base
-  has_slug [:first_name, :last_name]
+  has_slug [:first_name, :last_name], :on_conflict => :append_id
 end
 
 class Edge < ActiveRecord::Base
