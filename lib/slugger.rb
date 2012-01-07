@@ -25,7 +25,8 @@ module Slugger
                              "#{slugger_options[:slug_column]} column"
       end
 
-      before_validation :permalize, :on => :create
+      before_validation :permalize,          :on => :create
+      before_validation :permalize_on_blank, :on => :update
 
       # Used by +slug_conflict_resolution_append_id+
       after_create      :append_id_to_slug
@@ -77,6 +78,10 @@ module Slugger
       self.send("#{self.slugger_options[:slug_column]}=", s)
 
       slug_conflict_resolution
+    end
+
+    def permalize_on_blank
+      permalize if self[slugger_options[:slug_column]].blank?
     end
 
     def slug_conflict_resolution(append=nil)
