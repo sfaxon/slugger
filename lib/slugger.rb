@@ -8,7 +8,7 @@ module Slugger
   end
   module ClassMethods
     def has_slug(title_column=nil,options={})
-      class_inheritable_accessor :slugger_options
+      class_attribute :slugger_options
       default_options = {
         :title_column      => 'title',
         :slug_column       => 'slug',
@@ -19,7 +19,7 @@ module Slugger
       # :on_conflict can be :error or :concat_random_chars
       self.slugger_options = default_options.merge(options)
       self.slugger_options[:title_column] = title_column unless title_column.nil?
-      
+
       # if columns_hash[slugger_options[:title_column].to_s].nil?
       #   raise ArgumentError, "#{self.name} is missing source column"
       # end
@@ -35,7 +35,7 @@ module Slugger
       end
 
       send :define_method, :column_to_slug, lambda { self.send(slugger_options[:title_column]) }
-    
+
       include InstanceMethods
     end
   end
