@@ -31,6 +31,9 @@ module Slugger
       # Used by +slug_conflict_resolution_append_id+
       after_create      :append_id_to_slug
 
+      # Used by +slug_conflict_resolution_append_id+
+      after_create      :append_id_to_slug
+
       validates slugger_options[:slug_column].to_sym, :presence => true
 
       if slugger_options[:scope]
