@@ -69,6 +69,7 @@ module Slugger
       # Replace spaces with dashes or custom substitution character
       s.gsub!(/\ +/, slugger_options[:substitution_char].to_s)
       s.downcase! if slugger_options[:downcase]
+      s = s[0..(slugger_options[:max_length] - 1)] if slugger_options[:max_length]
 
       self.send("#{self.slugger_options[:slug_column]}=", s)
 

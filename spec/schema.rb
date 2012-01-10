@@ -13,14 +13,14 @@ class CreateSchema < ActiveRecord::Migration
       t.string :slug
       t.timestamps
     end
-    
+
     create_table :users, :force => true do |t|
       t.string :first_name
       t.string :last_name
       t.string :slug
       t.timestamps
     end
-    
+
     create_table :edges, :force => true do |t|
       t.string :name
       t.string :slug_name
@@ -33,7 +33,7 @@ CreateSchema.suppress_messages do
 end
 
 class Post < ActiveRecord::Base
-  has_slug
+  has_slug 'title', :max_length => 20
 end
 
 class User < ActiveRecord::Base
