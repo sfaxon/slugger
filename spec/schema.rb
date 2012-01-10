@@ -37,7 +37,7 @@ class Post < ActiveRecord::Base
 end
 
 class User < ActiveRecord::Base
-  has_slug [:first_name, :last_name]
+  has_slug [:first_name, :last_name], :on_conflict => :append_id
 end
 
 class Edge < ActiveRecord::Base

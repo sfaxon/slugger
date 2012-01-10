@@ -27,6 +27,9 @@ module Slugger
 
       before_validation :permalize, :on => :create
 
+      # Used by +slug_conflict_resolution_append_id+
+      after_create      :append_id_to_slug
+
       validates slugger_options[:slug_column].to_sym, :presence => true
 
       if slugger_options[:scope]
@@ -92,8 +95,24 @@ module Slugger
       slug_conflict_resolution
     end
 
+    def slug_conflict_resolution_append_id(append)
+      slug_column       = slugger_options[:slug_column]
+      substitution_char = slugger_options[:substitution_char]
+
+      # Temporarily write the slug with '+ID+' appended, then update the slug
+      # after the record is saved to the database +appended_id_to_slug+
+      self[slug_column] = [self[slug_column], '+ID+'].join(substitution_char)
+    end
+
     def slug_conflict_resolution_error(append)
       # no op, validation sets error
+    end
+
+    def append_id_to_slug
+      slug_column = slugger_options[:slug_column]
+      id_regex    = /\+ID\+\z/
+      return unless self[slug_column][id_regex]
+      update_attribute(slug_column, self[slug_column].gsub(id_regex, id.to_s))
     end
   end
 end
