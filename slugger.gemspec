@@ -27,5 +27,4 @@ Gem::Specification.new do |s|
   s.add_dependency "activerecord", ">= 3.0.0"
   s.add_development_dependency "rspec", ">= 2.0.0"
   s.add_development_dependency "sqlite3", "~> 1.3.0"
-  # s.add_runtime_dependency "rest-client"
 end
