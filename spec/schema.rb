@@ -25,6 +25,11 @@ class CreateSchema < ActiveRecord::Migration
       t.string :name
       t.string :slug_name
     end
+    create_table :comments, :force => true do |t|
+      t.integer :post_id
+      t.string  :title
+      t.string  :slug
+    end
   end
 end
 
@@ -33,6 +38,7 @@ CreateSchema.suppress_messages do
 end
 
 class Post < ActiveRecord::Base
+  has_many :comments
   has_slug 'title', :max_length => 20
 end
 
@@ -45,4 +51,9 @@ class Edge < ActiveRecord::Base
                    :substitution_char => "_",
                    :downcase => false,
                    :on_conflict => :concat_random_chars
+end
+
+class Comment < ActiveRecord::Base
+  belongs_to :post
+  has_slug   :title, :scope => :post_id
 end
