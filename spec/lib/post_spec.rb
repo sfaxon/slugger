@@ -13,10 +13,15 @@ describe Post do
     p = Post.create(:title => "apostrop'hes", :slug => "apostrophes")
     p.slug.should == "apostrophes"
   end
-  it "should be limited to 20 characters" do
+  it "slug should be limited to 20 characters" do
     p = Post.create(
       :title => "when you write really long titles slugs should be shortened")
     p.slug.should == "when-you-write-reall"
+  end
+  it "slug should not end with a substitution character" do
+    p = Post.create(
+      :title => "when you write very long titles slugs should be shortened")
+    p.slug.should == "when-you-write-very"
   end
   it "should not be valid on duplicate" do
     p = Post.create(:title => "hello")
