@@ -48,6 +48,19 @@ module Slugger
 
       send :define_method, :column_to_slug,
         lambda { self.send(slugger_options[:title_column]) }
+
+      def self.find_by_id_or_slug(slugish)
+
+        # If it looks like an id, try that as optimized fast scenario
+        if slugish.to_i > 0
+          begin
+            return self.find(slugish)
+          rescue ActiveRecord::RecordNotFound # Continue to flow below.
+          end
+        end
+
+        self.send("find_by_#{slugger_options[:slug_column]}", slugish)
+      end
             
       include InstanceMethods
     end
