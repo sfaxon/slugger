@@ -7,7 +7,12 @@ module Slugger
     base.extend(ClassMethods)
   end
   module ClassMethods
-    def has_slug(title_column=nil,options={})
+    def has_slug(*args)
+      
+      # Get parameters from splat.
+      options = args.extract_options!
+      title_column = args[0] unless args[0].nil?
+      
       class_attribute :slugger_options
       default_options = {
         :title_column      => 'title',
@@ -16,7 +21,7 @@ module Slugger
         :downcase          => true,
         :on_conflict       => :error
       }
-
+      
       self.slugger_options = default_options.merge(options)
       self.slugger_options[:title_column] = title_column unless title_column.nil?
 
@@ -43,7 +48,7 @@ module Slugger
 
       send :define_method, :column_to_slug,
         lambda { self.send(slugger_options[:title_column]) }
-
+            
       include InstanceMethods
     end
   end
