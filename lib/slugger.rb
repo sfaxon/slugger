@@ -1,6 +1,5 @@
 require 'slugger/version'
 require 'active_record'
-require 'iconv'
 
 module Slugger
   def self.included(base)
@@ -65,10 +64,9 @@ module Slugger
         self.slugger_options[:title_column].each do |m|
           s = "#{s} #{self.send(m)}"
         end
-        s = Iconv.iconv('ascii//ignore//translit', 'utf-8', s).to_s
+        s = s.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?")
       else
-        s = Iconv.iconv('ascii//ignore//translit', 'utf-8',
-              self.send("#{self.slugger_options[:title_column]}")).to_s
+        s = self.send("#{self.slugger_options[:title_column]}").encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "?")
       end
 
       # Remove apostrophes
