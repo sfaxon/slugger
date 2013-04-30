@@ -19,7 +19,7 @@ module Slugger
       self.slugger_options = default_options.merge(options)
       self.slugger_options[:title_column] = title_column unless title_column.nil?
 
-      if defined?(Rails) == 'constant' && Rails.class == Module
+      if defined?(Rails) == 'constant' && Rails.class == Module && defined?(ActiveRecord::Migrator::CheckPending) == 'constant'
         migrator = ActiveRecord::Migrator.new(:up, Rails.root.join(ActiveRecord::Migrator.migrations_path))
       else
         migrator = ActiveRecord::Migrator.new(:up, ActiveRecord::Migrator.migrations_path)
