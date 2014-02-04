@@ -6,7 +6,12 @@ module Slugger
     base.extend(ClassMethods)
   end
   module ClassMethods
-    def has_slug(title_column=nil,options={})
+    def has_slug(*args)
+      
+      # Get parameters from splat.
+      options = args.extract_options!
+      title_column = args[0] unless args[0].nil?
+      
       class_attribute :slugger_options
       default_options = {
         :title_column      => 'title',
@@ -15,7 +20,7 @@ module Slugger
         :downcase          => true,
         :on_conflict       => :error
       }
-
+      
       self.slugger_options = default_options.merge(options)
       self.slugger_options[:title_column] = title_column unless title_column.nil?
 
@@ -49,6 +54,19 @@ module Slugger
       send :define_method, :column_to_slug,
         lambda { self.send(slugger_options[:title_column]) }
 
+      def self.find_by_id_or_slug(slugish)
+
+        # If it looks like an id, try that as optimized fast scenario
+        if slugish.to_i > 0
+          begin
+            return self.find(slugish)
+          rescue ActiveRecord::RecordNotFound # Continue to flow below.
+          end
+        end
+
+        self.send("find_by_#{slugger_options[:slug_column]}", slugish)
+      end
+            
       include InstanceMethods
     end
   end
