@@ -50,3 +50,6 @@ Say you have an Episode model that belongs to TVSeries.  Every episode will have
   Collection.create(:title => 'Quick foxes jumping')
   Collection.first.slug => 'quick-foxes-jumping'
 
+== License
+
+MIT
